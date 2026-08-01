@@ -1,84 +1,36 @@
-ESP32 VFD Clock with millis() Timer
-Overview
-A simple digital clock implementation for ESP32 using a Vacuum Fluorescent Display (VFD) with the LD1207 driver chip. The clock uses millis() for timekeeping without blocking delays, making it efficient and responsive.
+# ESP32 VFD Clock with millis() Timer
 
-Features
-✅ Accurate timekeeping using ESP32's millis() function
+![VFD Display](LD1207/Screenshot%202026-07-20%20183320.jpg)
 
-✅ VFD display support with LD1207 driver
+## Overview
+A simple digital clock implementation for ESP32 using a Vacuum Fluorescent Display (VFD) with the LD1207 driver chip. The clock uses `millis()` for timekeeping without blocking delays, making it efficient and responsive.
 
-✅ Blinking colon (blinks every second)
+## Features
+- ✅ **Accurate timekeeping** using ESP32's `millis()` function
+- ✅ **VFD display support** with LD1207 driver
+- ✅ **Blinking colon** (blinks every second)
+- ✅ **Animated snake pattern** on the first grid segment
+- ✅ **24-hour time format**
+- ✅ **Non-blocking operation** - no `delay()` used
 
-✅ Animated snake pattern on the first grid segment
+## Hardware Requirements
+- ESP32 development board
+- VFD display module with LD1207 driver
+- 3.3V/5V logic level compatible (ESP32 uses 3.3V logic)
 
-✅ 24-hour time format
+### Pin Connections
+| ESP32 Pin | VFD Module | Description |
+|-----------|------------|-------------|
+| GPIO 23   | DIN        | Data input  |
+| GPIO 18   | CLK        | Clock signal|
+| GPIO 19   | STB        | Strobe signal|
 
-✅ Non-blocking operation - no delay() used
+**Note:** The pins can be customized in the code by modifying the following definitions:
 
-Hardware Requirements
-ESP32 development board
-
-VFD display module with LD1207 driver
-
-3.3V/5V logic level compatible (ESP32 uses 3.3V logic)
-
-Pin Connections
-ESP32 Pin	VFD Module	Description
-GPIO 23	DIN	Data input
-GPIO 18	CLK	Clock signal
-GPIO 19	STB	Strobe signal
-Note: The pins can be customized in the code by modifying the following definitions:
-
-cpp
 #define VFD_in  23  // Data input
 #define VFD_clk 18  // Clock
 #define VFD_stb 19  // Strobe
-How It Works
-Timekeeping
-The clock uses millis() to track time without blocking interrupts or using delay functions. Every second, the counter increments:
 
-Seconds increment every 1000ms
-
-Minutes increment when seconds reach 60
-
-Hours increment when minutes reach 60
-
-Hours reset to 0 after 23
-
-Display Driver
-The LD1207 driver communicates with the VFD panel through a 3-wire SPI-like interface:
-
-Command Mode: Sets display configuration, brightness, and memory addressing
-
-Data Mode: Sends actual display data to the panel
-
-Display Layout
-The VFD panel displays:
-
-Grid 0: Animated snake pattern (8-frame animation at 8 FPS)
-
-Grid 1: Minutes units + blinking colon
-
-Grid 2: Minutes tens
-
-Grid 3: Hours units
-
-Grid 4: Hours tens
-
-Code Structure
-Key Functions
-Function	Description
-setup()	Initializes pins, display driver, and sets initial time
-loop()	Updates time every second and refreshes display
-LD1207_init()	Initializes VFD driver with default settings
-send_command()	Sends command bytes to the LD1207
-send_data8()	Sends 8-bit data to the display memory
-write_panel_DVD()	Updates the entire display with current time
-Display Character Table
-The segNumber[] array defines the 7-segment patterns for digits 0-9 and colon:
-
-cpp
-segNumber[10] = 0b01000000; // Colon character
 Animation Pattern
 The snake animation uses an 8-frame sequence:
 
